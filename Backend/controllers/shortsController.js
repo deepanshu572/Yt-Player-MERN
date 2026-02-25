@@ -157,6 +157,52 @@ export const handleAddViews = async (req, res) => {
   } catch (err) {
     return res
       .status(400)
-      .json("somthing wents wrong in  shorts controller handleAddViews fnc"+ err);
+      .json(
+        "somthing wents wrong in  shorts controller handleAddViews fnc" + err,
+      );
+  }
+};
+export const handleDeleteShort = async (req, res) => {
+  try {
+    const { shortId } = req.params;
+    if (!shortId) {
+      return res.status(400).json({
+        message: "Short not found in handleDeleteShort fnc",
+      });
+    }
+    const short = await shorts.findByIdAndDelete(shortId);
+    return res.status(200).json({ short });
+  } catch (err) {
+    return res.status(400).json({
+      message: "somthing wents wrong in handleDeleteShort fnc" + err,
+    });
+  }
+};
+export const handleUpdateShort = async (req, res) => {
+  try {
+    const { shortId } = req.params;
+    // console.log(req.body)
+    const { title, description, tags } = req.body;
+    // console.log(title, description, tags)
+    if (!title || !description || !tags) {
+      return res
+        .status(400)
+        .json({ message: "Title, description And tags is not found !" });
+    }
+    const short = await shorts.findById(shortId);
+    if (!short) {
+      return res.status(400).json({
+        message: "Short not found in handleUpdateShort fnc",
+      });
+    }
+    short.title = title || short.title;
+    short.description = description || short.description;
+    short.tags = tags || short.tags;
+    await short.save();
+    return res.status(200).json({ short });
+  } catch (err) {
+    return res.status(400).json({
+      message: "somthing wents wrong in handleUpdateShort fnc" + err,
+    });
   }
 };

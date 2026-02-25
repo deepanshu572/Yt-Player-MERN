@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import SideNavDashBoard from "../components/SideNavDashBoard";
-import SideNavRightSec from "../components/SideNavRightSec";
+import DashBoard from "../components/DashBoard";
+import { useSelector } from "react-redux";
 const YtDashboard = () => {
  const [content, setContent] = useState("dashboard");
  const handleTabContent = (tabName) =>{
    setContent(tabName);
  }
+   const channel = useSelector((state) => state.usersData.channelData);
+
 
   return (
     <>
@@ -14,7 +17,7 @@ const YtDashboard = () => {
           <SideNavDashBoard action={handleTabContent} />
         </div>
         <div className="right_sec w-[95%] my-2 mt-[3rem] m-auto  ">
-          <SideNavRightSec tab={content}  />
+          <DashBoard channel={channel}   />
         </div>
       </div>
     </>

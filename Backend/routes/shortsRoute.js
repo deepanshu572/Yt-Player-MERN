@@ -7,6 +7,8 @@ import {
   handleAddComment,
   handleAddReply,
   handleAddViews,
+  handleUpdateShort,
+  handleDeleteShort,
 } from "../controllers/shortsController.js";
 
 const shortsRouter = express.Router();
@@ -17,5 +19,7 @@ shortsRouter.put("/short/:shortId/saveShort", isAuth, handleSaveBy);
 shortsRouter.post("/short/:shortId/AddComment", isAuth, handleAddComment);
 shortsRouter.post("/short/:shortId/AddReply", isAuth, handleAddReply);
 shortsRouter.put("/short/:shortId/AddViews", isAuth, handleAddViews);
+shortsRouter.put("/short/:shortId/DeleteShort", isAuth, handleDeleteShort);
+shortsRouter.post("/short/:shortId/UpdateShort", isAuth, handleUpdateShort);
 
 export default shortsRouter;

@@ -28,3 +28,32 @@ export const handlePlaylistSave = async (req, res) => {
       .json({ message: "something wents wrong in handlePlaylistSave fnc " });
   }
 };
+
+export const handleDeletePlaylist = async (req,res) =>{
+  try{
+    const { playlistId } = req.params;
+    const playlist = await playlists.findByIdAndDelete(playlistId);
+    if(!playlist){
+      return res.status(404).json({ message: "Playlist not found!" });
+    }
+    return res.status(200).json({ message: "Playlist deleted successfully!"  , playlist});
+  }
+  catch(err){
+    return res.status(400).json({ message: "something wents wrong in handleDeletePlaylist fnc " });
+  }
+}
+
+export const handleUpdatePlaylist = async (req,res) =>{
+  try{
+     const { channelId, title, description, selectedVideos } = req.body;
+        const playlist = await playlists.create({
+          channel: channelId,
+          title,
+          description,
+          selectedVideos,
+        });
+  }
+  catch(err){
+    return res.status(400).json({ message: `something wents wrong in handleUpdatePlaylist fnc ${err} ` });
+  }
+}

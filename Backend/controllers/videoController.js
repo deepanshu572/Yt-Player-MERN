@@ -1,3 +1,4 @@
+import uploadOnCloudinary from "../config/cloudinary.js";
 import videos from "../model/videoModel.js";
 
 export const handletoggleLikes = async (req, res) => {
@@ -142,19 +143,67 @@ export const handleAddViews = async (req, res) => {
   try {
     const { videoId } = req.params;
     const userId = req.userId;
-    const video = await videos.findOne({_id : videoId});
-     if(!video){
+    const video = await videos.findOne({ _id: videoId });
+    if (!video) {
       return res.status(400).json({
-        message : "Video not found !"
-      })
-     }
-     video.views +=1;
-     await video.save();
-     return res.status(200).json({video});
-
+        message: "Video not found !",
+      });
+    }
+    video.views += 1;
+    await video.save();
+    return res.status(200).json({ video });
   } catch (err) {
     return res.status(400).json({
-        message : "somthing wents wrong in handleAddViews fnc"
-      })
+      message: "somthing wents wrong in handleAddViews fnc",
+    });
+  }
+};
+export const handleUpdateVideo = async (req, res) => {
+  try {
+    const { title, description, tags } = req.body;
+    const { videoId } = req.params;
+    const file = req.file;
+    console.log(" file.videoBanner?.[0]");
+    console.log(file);
+    console.log(" file.videoBanner?.[0]");
+    let videoBanner;
+
+    const video = await videos.findOne({ _id: videoId });
+
+    if (!title || !description || !tags) {
+      return res
+        .status(400)
+        .json({ message: "Title, description And tags is not found !" });
+    }
+
+    if (file && file !== undefined && file !== null) {
+      videoBanner = await uploadOnCloudinary(file.path);
+      video.videoBanner = videoBanner;
+    }
+    if (!video) {
+      return res.status(400).json({ message: "video is not found!" });
+    }
+
+    video.title = title;
+    video.description = description;
+    video.tags = tags;
+    await video.save();
+    console.log(video);
+    return res.status(200).json({ video });
+  } catch (err) {
+    return res
+      .status(400)
+      .json({ message: `some problem in handleUpdate fnc ! ${err} ` });
+  }
+};
+export const handleDeleteVideo = async (req, res) => {
+  try {
+    const {videoId} = req.params;
+    console.log(videoId)
+    const video = await videos.findByIdAndDelete(videoId );
+    console.log(video)
+    return res.status(200).json({message : "Video is deleted", video})
+  } catch (err) {
+    return res.status(400).json({message : `some problm in handleDeleteVideo fnc !  ${err}`})
   }
 };
