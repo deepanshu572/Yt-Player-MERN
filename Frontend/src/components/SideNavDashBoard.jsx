@@ -61,7 +61,7 @@ const SideNavDashBoard = () => {
     <>
     <div className={`h-screen w-[11rem] hidden md:block `}>
     <div className="h-screen fixed w-[13rem] left-0 top-0 bg-black justify-between p-3  px-0  border-r border-r-gray-900 flex flex-col items-center ">
-      <div className="flex w-full flex-col mt-0 gap-1 ">
+      <div className="flex w-full flex-col mt-0 gap-1  ">
         <Link to={'/'} className="img_wrap flex items-center mb-4 px-2">
         <img src={studio} className="w-10" alt="" />
         <h3>YtStudio</h3>
@@ -101,8 +101,12 @@ const SideNavDashBoard = () => {
       </div>
     </div>
     </div>
+     <Link to={'/'} className="img_wrap md:hidden fixed top-0 left-0 w-full bg-black p-2 flex items-center mb-4 px-2">
+        <img src={studio} className="w-10" alt="" />
+        <h3>YtStudio</h3>
+      </Link>
 
-    <div className="fixed md:hidden  bottom-0 left-0 w-full flex gap-1 items-center justify-between">
+    <div className="fixed md:hidden bg-black   bottom-0 left-0 w-full flex gap-1 items-center justify-between">
         {arr?.map((item, index) => {
           return (
             <div

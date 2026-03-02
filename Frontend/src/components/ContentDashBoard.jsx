@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { timeAgo } from "../Utils/timeConvertor";
-import { MdDelete } from "react-icons/md";
 import { Link } from "react-router";
 import ModelContent from "../childComponent/ModelContent";
 import { useSelector } from "react-redux";
-
+import { FaEye } from "react-icons/fa";
 const ContentDashBoard = () => {
   const [selectedContent, setSelectedContent] = useState("videos");
   const [modal, setModal] = useState(false);
@@ -57,10 +56,10 @@ const ContentDashBoard = () => {
           short._id === updateData?._id ? { ...short, ...updateData } : short,
         ),
       }));
-    }
+    } 
+    
   };
   const DeleteFnc = (DeletedData) => {
-    console.log(DeletedData);
     if (selectedItem.name === "videos") {
       setChannel((prev) => ({
         ...prev,
@@ -71,15 +70,26 @@ const ContentDashBoard = () => {
         ...prev,
         shorts: prev.shorts.filter((short) => short._id !== DeletedData?._id),
       }));
+    } else if (selectedItem.name === "playlists") {
+      setChannel((prev) => ({
+        ...prev,
+        playlists: prev.playlists.filter((playlist) => playlist._id !== DeletedData?._id),
+      }));
+    } else if (selectedItem.name === "communityPosts") {
+      setChannel((prev) => ({
+        ...prev,
+        communityPosts: prev.communityPosts.filter((post) => post._id !== DeletedData?._id),
+      }));
     }
   };
 
-  const handleContentUpdate = (id, name, item, video) => {
+  const handleContentUpdate = (id, name, item, video, channelId) => {
     setSelectedItem({
       name: name,
       id: id,
       item,
-      video
+      video,
+      channelId
     });
     setModal(true);
   };
@@ -215,7 +225,7 @@ const ContentDashBoard = () => {
                   </h3>
                   <h3 className="p-1 px-4 text-[13px] w-[15rem]">
                     <div onClick={() =>
-                        handleContentUpdate(item?._id, "playlists", item, channel?.videos)
+                        handleContentUpdate(item?._id, "playlists", item, channel?.videos, channel?._id)
                       }>
                       <CiEdit className="w-5 h-5 text-green-500" />
                     </div>
@@ -252,8 +262,13 @@ const ContentDashBoard = () => {
                   <h3 className="p-1 px-4 text-[13px] w-[15rem]">
                     <Link to={`/edit${item?._id}`}>
                       {" "}
-                      <MdDelete className="w-5 h-5 text-red-600" />
+                     
                     </Link>
+                     <div onClick={() =>
+                      handleContentUpdate(item?._id, "communityPosts", item)
+                      }>
+                       <FaEye className="w-5 h-5 text-green-600" />
+                    </div>
                   </h3>
                 </div>
               );

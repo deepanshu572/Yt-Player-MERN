@@ -1,5 +1,5 @@
 import playlists from "../model/playlistModel.js";
-
+import channels from "../model/channelModel.js";
 export const handlePlaylistSave = async (req, res) => {
   try {
     const { playlistId } = req.params;
@@ -8,7 +8,7 @@ export const handlePlaylistSave = async (req, res) => {
     let playlist = await playlists.findById(playlistId).populate({
       path: "selectedVideos",
       model: "video",
-    })
+    });
 
     if (!playlist) {
       return res.status(400).json({ message: "Playlist not found!" });
@@ -29,31 +29,52 @@ export const handlePlaylistSave = async (req, res) => {
   }
 };
 
-export const handleDeletePlaylist = async (req,res) =>{
-  try{
+export const handleDeletePlaylist = async (req, res) => {
+  try {
     const { playlistId } = req.params;
     const playlist = await playlists.findByIdAndDelete(playlistId);
-    if(!playlist){
+    if (!playlist) {
       return res.status(404).json({ message: "Playlist not found!" });
     }
-    return res.status(200).json({ message: "Playlist deleted successfully!"  , playlist});
+    return res
+      .status(200)
+      .json({ message: "Playlist deleted successfully!", playlist });
+  } catch (err) {
+    return res
+      .status(400)
+      .json({ message: "something wents wrong in handleDeletePlaylist fnc " });
   }
-  catch(err){
-    return res.status(400).json({ message: "something wents wrong in handleDeletePlaylist fnc " });
-  }
-}
+};
 
-export const handleUpdatePlaylist = async (req,res) =>{
-  try{
-     const { channelId, title, description, selectedVideos } = req.body;
-        const playlist = await playlists.create({
-          channel: channelId,
-          title,
-          description,
-          selectedVideos,
-        });
+export const handleUpdatePlaylist = async (req, res) => {
+  try {
+    const {
+      channelId,
+      title,
+      description,
+      selectedVideos,
+    } = req.body;
+    console.log(req.body);
+    const playlist = await playlists.findByIdAndUpdate(
+      req.params.playlistId,
+      {
+        title,
+        description,
+        selectedVideos,
+      },
+      { new: true },
+    );
+  
+
+    if (!playlist) {
+      return res.status(404).json({ message: "Playlist not found!" });
+    }
+    return res
+      .status(200)
+      .json({ message: "Playlist updated successfully!", playlist });
+  } catch (err) {
+    return res.status(400).json({
+      message: `something wents wrong in handleUpdatePlaylist fnc ${err} `,
+    });
   }
-  catch(err){
-    return res.status(400).json({ message: `something wents wrong in handleUpdatePlaylist fnc ${err} ` });
-  }
-}
+};

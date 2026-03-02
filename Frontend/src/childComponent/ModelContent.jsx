@@ -4,16 +4,19 @@ import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
 import { serverUrl } from "../App";
 const ModelContent = ({ selectedItem, change, deleteFnc }) => {
-  console.log(selectedItem);
+  // console.log(selectedItem);
   const [toggle, setToggle] = useState(false);
 
   const [loadUpdate, setLoadUpdate] = useState(false);
   const [loadDelete, setLoadDelete] = useState(false);
   const [id, setId] = useState();
+  const [channelId, setChannelId] = useState();
   const [title, setTitle] = useState();
   const [tags, setTags] = useState();
   const [desc, setDesc] = useState();
+  const [comunityImg, setCommunityImg] = useState();
   const [selectedPlaylistVideo, setSelectedPlaylistVideo] = useState([]);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState([]);
   const [allPlaylistVideos, setAllPlaylistVideos] = useState([]);
   const [frontendImageVideo, setFrontendImageVideo] = useState({
     videoBanner: null,
@@ -24,11 +27,14 @@ const ModelContent = ({ selectedItem, change, deleteFnc }) => {
 
   useEffect(() => {
     if (selectedItem?.item) {
+      setChannelId(selectedItem?.channelId || "");
       setSelectedPlaylistVideo(selectedItem?.item?.selectedVideos || []);
+      setSelectedPlaylistId(selectedItem?.item?.selectedVideos?.map((video) => video._id) || []);
       setAllPlaylistVideos(selectedItem?.video || []);
       setTitle(selectedItem.item.title || "");
       setTags(selectedItem.item.tags || []);
       setDesc(selectedItem.item.description || "");
+      setCommunityImg(selectedItem.item.image || "");
       setId(selectedItem.item._id || "");
       setFrontendImageVideo({
         videoBanner: selectedItem.item.videoBanner || null,
@@ -101,6 +107,24 @@ const ModelContent = ({ selectedItem, change, deleteFnc }) => {
       console.log(err);
     }
   };
+  const handleDeleteCommunity = async (communityId) => {
+    setLoadDelete(true);
+    try {
+      const { data } = await axios.put(
+        serverUrl + `/api/toggles/community/${communityId}/DeleteCommunityPost`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      deleteFnc(data.deletedPost);
+      setLoadDelete(false);
+      setToggle(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleUpdateShort = async () => {
     setLoadUpdate(true);
@@ -132,15 +156,52 @@ const ModelContent = ({ selectedItem, change, deleteFnc }) => {
       [type]: URL.createObjectURL(file),
     }));
   };
-  const handleVideoSelect = (e, videoId) => {
-    if (e.target.checked) {
-      setSelectedPlaylistVideo((prev) => [...prev, videoId]);
+const handleVideoSelect = (video) => {
+  setSelectedPlaylistVideo((prev) => {
+    let updated;
+
+    if (prev.some((item) => item?._id === video._id)) {
+      updated = prev.filter((item) => item?._id !== video._id);
     } else {
-      setSelectedPlaylistVideo((prev) => prev.filter((id) => id !== videoId));
+      updated = [...prev, video];
+    }
+
+    setSelectedPlaylistId(updated.map((item) => item._id));
+
+    return updated;
+  });
+};
+  console.log(selectedPlaylistId, selectedPlaylistVideo);
+
+  const handleSelectedVideoDelete = (videoId) => {
+    setSelectedPlaylistVideo((prev) =>
+      prev.filter((item) => item?._id !== videoId),
+    );
+    setSelectedPlaylistId((prev) =>
+      prev.filter((item) => item !== videoId),
+    );
+    alert("Are you sure you want to remove this video from the playlist?");
+  };
+  
+  const handleUpdatePlaylist = async () => {
+    try {
+      const { data } = await axios.post(
+        serverUrl + `/api/toggles/playlist/${id}/UpdatePlaylist`,
+        {
+          channelId,
+          title,
+          description: desc,
+          selectedVideos: selectedPlaylistId,
+          selectedVideosData: selectedPlaylistVideo,
+        },
+        {
+          withCredentials: true,   
+        },
+      );
+    } catch (err) {
+      console.log(err);
     }
   };
-
-
   return (
     <>
       {selectedItem?.name === "videos" && (
@@ -288,7 +349,7 @@ const ModelContent = ({ selectedItem, change, deleteFnc }) => {
               onSubmit={(e) => e.preventDefault()}
               className="form flex flex-col gap-3 w-full"
             >
-              <div className="flex p-3 overflow-y-auto hide_scroll h-[50vh] w-full  flex-col">
+              <div className="flex p-3 overflow-y-auto hide_scroll  w-full  flex-col">
                 <div className="inp">
                   <label
                     htmlFor="title"
@@ -380,7 +441,7 @@ const ModelContent = ({ selectedItem, change, deleteFnc }) => {
             </p>
 
             <form
-              onChange={(e) => e.preventDefault()}
+               onSubmit={(e) => e.preventDefault()}
               className="form flex flex-col gap-3 w-full"
             >
               <div className="flex p-3 overflow-y-auto hide_scroll h-[50vh] w-full  flex-col">
@@ -420,55 +481,107 @@ const ModelContent = ({ selectedItem, change, deleteFnc }) => {
                     placeholder="Tell viewers about your video"
                   ></textarea>
                 </div>
+                {selectedPlaylistVideo && selectedPlaylistVideo.length > 0 && (
+                  <div className="mt-2">
+                    <h3>Selected Videos</h3>
+                    <div className="flex">
+                      {selectedPlaylistVideo?.map((video) => (
+                        <div
+                          key={video._id}
+                          className="w-24 h-24 m-2 relative group"
+                        >
+                          {/* Overlay */}
+                          <div
+                            onClick={() => handleSelectedVideoDelete(video._id)}
+                            className="flex items-center justify-center absolute inset-0 bg-[#0000008c] opacity-0 group-hover:opacity-100 transition duration-300"
+                          >
+                            <RxCross2 className="w-5 h-5 cursor-pointer text-white" />
+                          </div>
+
+                          {/* Image */}
+                          <img
+                            className="w-full h-full object-cover"
+                            src={video.videoBanner}
+                            alt=""
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="mt-2">
-                  <h3>Selected Videos</h3>
+                  <h3>Add more Videos</h3>
                   <div className="flex">
-                    {selectedPlaylistVideo?.map((video) => (
-                      <div key={video._id} className="w-24 h-24 m-2">
+                    {allPlaylistVideos?.map((item) => (
+                      <div
+                        onClick={() => handleVideoSelect(item)}
+                        key={item._id}
+                        className="box_select p-2 w-40 h-30 pt-8 shrink-0 cursor-pointer relative"
+                      >
                         <img
-                          className="w-full h-full object-cover"
-                          src={video.videoBanner}
-                          alt=""
+                          className="w-full h-full object-cover rounded"
+                          src={item?.videoBanner}
+                          alt={item?.title}
                         />
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="mt-2">
-                  <h3>Selected Videos</h3>
-                  <div className="flex">
-                    {allPlaylistVideos?.map((item, index) => (
-                     <label
-                     key={item._id}
-                    htmlFor={`videos${item?._id}`}
-                    className="box_select p-2 W-40 h-30 pt-8 shrink-0"
-                  >
-                    <input
-                      type="checkbox"
-                      name={`videos${item?._id}`}
-                      onChange={(e) => handleVideoSelect(e, item?._id)}
-                      id={`videos${item?._id}`}
-                    />
-                      <img
-                        className="w-full h-full object-cover"
-                        src={item?.videoBanner}
-                        alt=""
-                      />
-                  </label>
                     ))}
                   </div>
                 </div>
               </div>
               <div className="flex justify-center gap-2">
                 <button
-                  onClick={handleUpdateShort}
+                  onClick={handleUpdatePlaylist}
                   className=" bg-[green] rounded-sm px-[5px] py-[7px] text-sm w-full cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out"
                 >
                   {loadUpdate ? <Loader /> : "Update"}
                 </button>
                 <button
-                  onClick={() => handleDeleteShort(id)}
+                  onClick={() => handleDeletePlaylist(id)}
                   className=" bg-[red] rounded-sm px-[5px] py-[7px] text-sm w-full cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out"
+                >
+                  {loadDelete ? <Loader /> : "Delete"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {selectedItem?.name === "communityPosts" && (
+        <div
+          className={`${toggle ? "block" : "hidden"}   transition-all duration-700 ease-in-out z-10 opacity-100
+        fixed inset-0 bg-[#00000032] flex justify-center items-center  backdrop-blur-sm`}
+        >
+          <div className="create  mt-[3rem] mb-[4rem] bg-black md:mb-0 md:mt-[5rem] hide_scroll w-[95%]  p-5 rounded-xl overflow-hidden md:w-1/3 md:h-full  overflow-y-auto ">
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl md:text-3xl font-bold">
+                Update Community Post
+              </h3>
+              <RxCross2
+                onClick={() => setToggle(false)}
+                className="w-7 h-7 cursor-pointer"
+              />
+            </div>
+            <p className="text-xs pt-1 border-b border-[#393939e4] pb-2 text-[#5e5e5e]">
+              delete your community post permanently from here.{" "}
+            </p>
+
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="form flex flex-col gap-3 w-full"
+            >
+              <div className="flex p-3 overflow-y-auto hide_scroll  w-full  flex-col">
+                <div className="img w-full md:h-75">
+                  <img
+                    src={comunityImg}
+                    className="w-full h-full object-cover"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div className="flex justify-center gap-2">
+                <button
+                  onClick={() => handleDeleteCommunity(id)}
+                  className="bg-[red] rounded-sm px-[5px] py-[7px] text-sm w-full cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out"
                 >
                   {loadDelete ? <Loader /> : "Delete"}
                 </button>
