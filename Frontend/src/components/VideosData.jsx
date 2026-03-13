@@ -27,7 +27,7 @@ const VideosData = () => {
   };
   return (
     <>
-      <div className="videoCard_wrapper">
+      <div className="videoCard_wrapper mb-[4rem] md:mb-0">
         <div className=" flex flex-wrap justify-center sm:justify-start  w-full ml-auto sm:gap-[10px]  pt-[54px] sm:pt-[80px] lg:pt-[79px] ">
           {videos?.map((item, index) => {
             return (

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 const VideoCard = ({
   id,
@@ -10,14 +9,17 @@ const VideoCard = ({
   title,
   description,
   channel,
-  action
+  action,
 }) => {
 
+  const nav = useNavigate();
   return (
     <>
-      <Link
-        to={`/video/${id}`}
-        onClick={() => action(id)}
+      <div
+        onClick={() => {
+          action(id);
+          nav(`/video/${id}`);
+        }}
         className="card p-1 w-[25rem]   sm:w-[31vw] lg:w-[15rem]  "
       >
         <div className="card_video w-full h-[14rem] sm:w-full sm:h-[8rem]  overflow-hidden self-center rounded-[10px]">
@@ -43,7 +45,7 @@ const VideoCard = ({
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </>
   );
 };

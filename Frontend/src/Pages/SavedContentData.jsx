@@ -29,12 +29,12 @@ const SavedContentData = () => {
   return (
     <div className="flex">
       <SideNav />
-      <div className="p-4 md:mt-[5rem]">
+      <div className="p-4 md:mt-[5rem] w-full">
         <h4 className="p-4 pl-1 text-sm mt-3 flex items-center gap-2">
           {" "}
           <SiYoutubeshorts className="fill-[#FF0033] w-6 h-8" /> Saved shorts
         </h4>
-         <div className="liked hide_scroll p-2 flex overflow-x-auto justify-center sm:justify-start  w-full ml-auto gap-5 sm:gap-[10px]  sm:pt-[8px]">
+         <div className="liked w-full whitespace-nowrap  hide_scroll p-2 md:flex overflow-x-auto justify-center sm:justify-start  w-full ml-auto gap-5 sm:gap-[10px]  sm:pt-[8px]">
                 {shorts?.map((item, index) => {
                   return (
                     <ChannelShortsCard

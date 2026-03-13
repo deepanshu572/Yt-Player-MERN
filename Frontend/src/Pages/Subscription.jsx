@@ -73,7 +73,7 @@ const Subscription = () => {
             <SiYoutubeshorts className="fill-[#FF0033] w-6 h-8" /> Subscribed
             shorts
           </h4>
-          <div className="subscibed_content flex overflow-x-auto justify-center sm:justify-start  w-full ml-auto sm:gap-[10px]  pt-[8px]">
+          <div className="subscibed_content whitespace-nowrap inline-block md:flex overflow-x-auto justify-center sm:justify-start  w-full ml-auto sm:gap-[10px]  pt-[8px]">
             {subscribedData?.map((item, index) => {
               return item?.shorts.map((el) => {
                 return (

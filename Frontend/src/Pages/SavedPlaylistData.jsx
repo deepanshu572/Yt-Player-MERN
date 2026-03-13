@@ -61,7 +61,6 @@ const SavedPlaylistData = () => {
     handleSavedPlaylist();
   }, []);
 
-
   return (
     <div className="flex">
       <SideNav />
@@ -88,48 +87,52 @@ const SavedPlaylistData = () => {
 
           <div className="flex items-center flex-wrap justify-center ">
             {toggle === true &&
-            
-             playlistVideos?.vidoesData?.map((item) => {
-              
-                  return (
-                    <VideoCard
-                      id={item?._id}
-                      image={item?.videoBanner}
-                      video={item?.video}
-                      title={item?.title}
-                      views={item?.views}
-                      description={item?.description}
-                      channel={playlistVideos?.channel}
-                      
-                    />
-                  );
-               
+              playlistVideos?.vidoesData?.map((item) => {
+                return (
+                  <VideoCard
+                    id={item?._id}
+                    image={item?.videoBanner}
+                    video={item?.video}
+                    title={item?.title}
+                    views={item?.views}
+                    description={item?.description}
+                    channel={playlistVideos?.channel}
+                  />
+                );
               })}
           </div>
         </div>
       </div>
-      <div className=" w-full p-4 md:mt-[5rem]">
-        <h4 className="p-4 pl-1 text-sm  flex items-center gap-2">
-          {" "}
-          <IoBookmarks className="fill-[#FF0033] w-5 h-6" /> Saved Playlist
-        </h4>
-        <div className="channel_video  p-3 mt-3 flex gap-3 flex-wrap relative">
-          {savedPlaylist?.map((item, index) => {
-            return (
-              <ChannelPlaylistCard
-                data={item}
-                channel={item?.channel}
-                key={index}
-                user={user}
-                action1={() =>
-                  handlePlaylistVideos(item?.selectedVideos, item?.title, item?.channel)
-                }
-                action2={() => handlePlaylist(item?._id)}
-              />
-            );
-          })}
+      {!savedPlaylist?.length > 0 ? (
+       <div className="flex h-screen w-full justify-center items-center">No Playlist Saved</div>
+      ) : (
+        <div className=" mt-5 w-full p-4 md:mt-[5rem]">
+          <h4 className="p-4 pl-1 text-sm  flex items-center gap-2">
+            {" "}
+            <IoBookmarks className="fill-[#FF0033] w-5 h-6" /> Saved Playlist
+          </h4>
+          <div className="channel_video  p-3 mt-3 flex gap-3 flex-wrap relative">
+            {savedPlaylist?.map((item, index) => {
+              return (
+                <ChannelPlaylistCard
+                  data={item}
+                  channel={item?.channel}
+                  key={index}
+                  user={user}
+                  action1={() =>
+                    handlePlaylistVideos(
+                      item?.selectedVideos,
+                      item?.title,
+                      item?.channel,
+                    )
+                  }
+                  action2={() => handlePlaylist(item?._id)}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

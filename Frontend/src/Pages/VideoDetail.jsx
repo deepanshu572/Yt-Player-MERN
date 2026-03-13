@@ -42,8 +42,9 @@ const VideoDetail = () => {
   useEffect(() => {
     if (videos?.length > 0 || videos !== null) {
       setAllVideoData(videos);
+      console.log(videos)
 
-      const video = videos.find((item) => item?._id === id);
+      const video = videos?.find((item) => item?._id === id);
       const AllrelatedVideos = videos.filter(
         (item) => item?.tags == video?.tags
       );

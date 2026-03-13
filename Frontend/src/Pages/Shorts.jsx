@@ -309,7 +309,7 @@ const Shorts = () => {
                     <div className="  bg-[#7877778a] hover:bg-[#b1b1b19e] w-8 h-8  rounded-full items-center justify-center  flex">
                       <FaRegCommentDots />
                     </div>
-                    <p className="text-[11px] mt-0.5">22k</p>
+                    <p className="text-[11px] mt-0.5">{item?.comments?.length}</p>
                   </div>
 
                   <div className="flex_like mb-1 text-white  items-center justify-center  flex flex-col">

@@ -129,14 +129,17 @@ const Header = () => {
                         ? " opacity-100"
                         : " opacity-0 pointer-events-none"
                     } fixed inset-0 bg-[#00000032] flex justify-center items-center z-[1090] backdrop-blur-sm`}
-        onClick={() => setTogglemic(false)}
+        
       >
-        <div className="flex items-center flex-col justify-between bg-black hide_scroll w-[85%] h-[35%] p-5 rounded-xl overflow-hidden sm:w-1/3 sm:h-1/2 overflow-y-auto">
+        <div className="flex relative items-center flex-col justify-between bg-black hide_scroll w-[85%] h-[35%] p-5 rounded-xl overflow-hidden sm:w-1/3 sm:h-1/2 overflow-y-auto">
+  <button onClick={() => setTogglemic(false)} className="cursor-pointer absolute top-0 right-0  p-4">
+                   <FaPlus className="w-5 h-5 rotate-45" />
+                </button>
           <div className="flex flex-col">
             <p className="text-center">Speak or type your query </p>
 
             <div
-              className={` flex serch_wrap mt-4  items-center gap-3 sm:w-full border-1 border-[#242424] rounded-full overflow-hidden`}
+              className={` md:hidden flex serch_wrap mt-4  items-center gap-3 sm:w-full border-1 border-[#242424] rounded-full overflow-hidden`}
             >
               <input
                 className={` ${
@@ -210,7 +213,7 @@ const Header = () => {
             {/* <SearchBar key={SearchRelatedData?.results?.value} data={SearchRelatedData} /> */}
           </div>
           <div
-            className="serch  p-3 py-1.5 "
+            className="serch  p-3 py-1.5 md:hidden "
             onClick={() => setTogglemic(true)}
           >
             <IoSearchOutline
@@ -221,6 +224,7 @@ const Header = () => {
           </div>
 
           <div
+            onClick={() => setTogglemic(true)}
             className={`
               rounded-full
              bg-[#6f6f6f33] hover:bg-[#6f6f6f8a] w-8.75 shrink-0 h-8.75 hidden   lg:flex items-center justify-center`}

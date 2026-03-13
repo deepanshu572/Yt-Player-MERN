@@ -35,7 +35,7 @@ const SavedLikedData = () => {
           {" "}
           <SiYoutubeshorts className="fill-[#FF0033] w-6 h-8" /> Liked shorts
         </h4>
-        <div className="liked hide_scroll p-2 flex overflow-x-auto justify-center sm:justify-start  w-full ml-auto gap-5 sm:gap-[10px]  sm:pt-[8px]">
+        <div className="liked inline-block whitespace-nowrap hide_scroll p-2 md:flex overflow-x-auto justify-center sm:justify-start  w-full ml-auto gap-5 sm:gap-[10px]  sm:pt-[8px]">
           {shorts?.map((item, index) => {
             return (
               <ChannelShortsCard
