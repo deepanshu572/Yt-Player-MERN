@@ -37,8 +37,7 @@ export const register = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
-      path : "/",
+      samesite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json(user);
@@ -66,8 +65,7 @@ export const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
-      path : "/",
+      samesite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json(existing);
@@ -103,8 +101,11 @@ export const googleAuth = async (req, res) => {
     }
     const token = await genToken(user._id);
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
+     httpOnly: true,
+      secure: true,
+       sameSite: "none",
+      path : "/", 
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json(existUser);
   } catch (error) {
