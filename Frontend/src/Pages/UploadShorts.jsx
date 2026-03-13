@@ -5,7 +5,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { getUser } from "../Hooks/getCurrentUser";
 import { useSelector } from "react-redux";
-import { alertHandler } from "../components/customAlert";
+import { alertHandler } from "../components/CustomAlert";
 import { useNavigate } from "react-router";
 import Loader from "../childComponent/Loader";
 // import { getAllVideos } from "../Hooks/getAllContentData";
