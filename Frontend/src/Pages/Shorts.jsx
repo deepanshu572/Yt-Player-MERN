@@ -253,8 +253,8 @@ const Shorts = () => {
   }, [shortsData]);
   return (
     <div className="flex">
-      <SideNav />
-      <div className=" hide_scroll w-full p-0   h-[85vh] overflow-y-scroll snap-y snap-mandatory md:p-4 mt-[3rem] md:mt-[5rem]">
+     <div className="md:block hidden"> <SideNav /> </div>
+      <div className=" hide_scroll w-full p-0  h-full md:h-[85vh] overflow-y-scroll snap-y snap-mandatory md:p-4 mt-[3rem] md:mt-[5rem]">
         {shortsData?.map((item, index) => {
           return (
             <div className="md:min-h-full w-full h-full flex md:items-center items-start justify-center snap-start relative  md:pt-[0px] mt-[3rem] ">
