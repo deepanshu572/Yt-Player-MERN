@@ -36,7 +36,9 @@ export const register = async (req, res) => {
     const token = await genToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
+      samesite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json(user);
   } catch (error) {
@@ -61,8 +63,10 @@ export const login = async (req, res) => {
     }
     let token = await genToken(existing._id);
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
+       httpOnly: true,
+      secure: true,
+      samesite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json(existing);
   } catch (error) {
@@ -130,7 +134,7 @@ export const sendOTP = async (req, res) => {
     user.resetOtp = otp;
     user.otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
     user.isOtpVerified = false;
-    console.log(otp)
+    console.log(otp);
     await user.save();
     await sendMail(email, otp);
     return res.status(200).json({ message: "OTP sent successfully" });
@@ -138,7 +142,6 @@ export const sendOTP = async (req, res) => {
     console.log(error);
   }
 };
-
 
 export const verifyOTP = async (req, res) => {
   try {
